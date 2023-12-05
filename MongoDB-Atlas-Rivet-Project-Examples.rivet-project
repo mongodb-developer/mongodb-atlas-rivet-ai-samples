@@ -1,0 +1,282 @@
+version: 4
+data:
+  attachedData:
+    trivet:
+      testSuites: []
+      version: 1
+  graphs:
+    9s_I6WhlSTWzAaql5XEt7:
+      metadata:
+        description: ""
+        id: 9s_I6WhlSTWzAaql5XEt7
+        name: 1- MongoDB Vector Store
+      nodes:
+        '[6dU3-tA5L4lC4M2U2J15A]:object "Object"':
+          data:
+            jsonTemplate: |-
+              {
+                "plot" : "Great AI movie with the best Vector Database",
+                "title" : "My AI Movie",
+                "genres" : ["Action"]
+              }
+          outgoingConnections:
+            - output->"Extract Object Path" OXi-D6PLgsB0RR-574K07/object
+            - output->"Store Vector in MongoDB" j6PtA_eIQIUhlyajB95JM/doc
+          visualData: 459/339/230/null//
+        '[B71_cSyAccXkpM0IvUoP-]:getEmbedding "Get Embedding"':
+          data:
+            integration: openai
+            useIntegrationInput: false
+          outgoingConnections:
+            - embedding->"Store Vector in MongoDB" j6PtA_eIQIUhlyajB95JM/vector
+          visualData: 1232/206/280/6//
+        '[OXi-D6PLgsB0RR-574K07]:extractObjectPath "Extract Object Path"':
+          data:
+            jsonTemplate: ""
+            path: $.plot
+            usePathInput: false
+          outgoingConnections:
+            - match->"Get Embedding" B71_cSyAccXkpM0IvUoP-/input
+          visualData: 832/175/280/5//
+        '[j6PtA_eIQIUhlyajB95JM]:mongoDBStore "Store Vector in MongoDB"':
+          data:
+            collection: embedded_movies
+            database: sample_mflix
+            path: plot_embedding
+          visualData: 1627/315/230/4//
+    UY796ysc87AHL_LX2G55R:
+      metadata:
+        description: ""
+        id: UY796ysc87AHL_LX2G55R
+        name: 2- MongoDB Vector Search Retrival
+      nodes:
+        '[AG_5XsTQP6g9IdRMF0Uoy]:array "Array"':
+          data:
+            flatten: true
+            flattenDeep: false
+          visualData: 1665.7411418563056/530.0795635624972/230/null//
+        '[NFQbYtG8gAUfpOvYYRigD]:getEmbedding "Get Embedding"':
+          data:
+            integration: openai
+            useIntegrationInput: false
+          outgoingConnections:
+            - embedding->"Search MongoDB for closest vectors with KNN"
+              ounFCx4bQGYOpPdItAupq/vector
+          visualData: 848/369/280/3//
+        '[TJgowm0LtjmZh7lNS_s3n]:text "Text"':
+          data:
+            text: Home Alone
+          outgoingConnections:
+            - output->"Get Embedding" NFQbYtG8gAUfpOvYYRigD/input
+          visualData: 349/498/330/2//
+        '[oJ0zoSsk-MspGZCzASAzZ]:array "Array"':
+          data:
+            flatten: true
+            flattenDeep: false
+          visualData: 1665.7411418563056/530.0795635624972/230/null//
+        '[ounFCx4bQGYOpPdItAupq]:mongoDBVectorKNN "Search MongoDB for closest vectors with KNN"':
+          data:
+            collection: embedded_movies
+            database: sample_mflix
+            k: 10
+            path: plot_embedding
+          outgoingConnections:
+            - documents->"Array" oJ0zoSsk-MspGZCzASAzZ/input1
+          visualData: 1217.4670895329114/518.3548244979391/230/1//
+    puzj17gj_xu56GUlr7164:
+      metadata:
+        description: ""
+        id: puzj17gj_xu56GUlr7164
+        name: 3- MongoDB AI Shop Graph
+      nodes:
+        '[0StxbIFHv-uN5fjfhsmGF]:getEmbedding "Get Embedding"':
+          data:
+            integration: openai
+            useIntegrationInput: false
+          isSplitRun: true
+          outgoingConnections:
+            - embedding->"Object" EoMPFBe-jFb3lse3wwM8M/embedding
+          splitRunMax: 10
+          visualData: 2127.165872243633/1227.826010112003/280/304//
+        '[EIMVNImIY9ilMTKRZ0y1y]:graphOutput "Graph Output"':
+          data:
+            dataType: object[]
+            id: list
+          visualData: 3808.758116270114/1095.587157999931/330/323//
+        '[EecRv7ZDLSO4hY7PC9216]:extractJson "Extract JSON"':
+          outgoingConnections:
+            - output->"Extract Object Path" Xi8Ftbz5DodT0oMUDvEKp/object
+          visualData: 841.3324156896467/587.953622792649/352.4861448483714/317//
+        '[EoMPFBe-jFb3lse3wwM8M]:object "Object"':
+          data:
+            jsonTemplate: |-
+              {
+                "base": {{baseObject}},
+                "embeddings": {{embedding}}
+              }
+          isSplitRun: true
+          outgoingConnections:
+            - output->"Array" hRtRkSGmuGPIN3R814Knp/input1
+          splitRunMax: 10
+          visualData: 2427.333616328224/972.9484028950787/605.8378558702143/319//
+        '[H6x2pi5gIdAe4Izs3YDDi]:graphOutput "Graph Output"':
+          data:
+            dataType: string
+            id: result
+          visualData: 3808.7444911678117/1311.0210016768099/330/322//
+        '[JBzVqr_7_xcJXEYfkVVAh]:code "Code"':
+          data:
+            code: >-
+              const shoppingList = inputs.input.value;
+
+
+              const aggregationQuery = [
+                  {
+                      "$search": {
+                          "index": "default",
+                          "knnBeta": {
+                              "vector": shoppingList[0].embeddings,
+                              "path": "embeddings",
+                              "k": 20
+                          }
+                      }
+                  },
+                  {$limit: 3},
+                  { $addFields: { "searchTerm": shoppingList[0].base.product } },
+                  ...shoppingList.slice(1).map((item) => ({
+                      $unionWith: {
+                          coll: "products",
+                          pipeline: [
+                              {
+                                  "$search": {
+                                      "index": "default",
+                                      "knnBeta": {
+                                          "vector": item.embeddings,
+                                          "path": "embeddings",
+                                          "k": 20
+                                      }
+                                  }
+                              },
+                              {$limit: 3},
+                              { $addFields: { "searchTerm": item.base.product } }
+                          ]
+                      }
+                  })),
+                  { $group: { _id: "$searchTerm", products: { $push: "$$ROOT" } } },
+                  { $project: { "_id": 0, "category": "$_id", "products.title": 1, "products.description": 1,"products.emoji" : 1, "products.imageUrl" : 1,"products.price": 1 } }
+              ];
+
+
+              return { output: { value: JSON.stringify(aggregationQuery), type: 'string'} };
+            inputNames: input
+            outputNames:
+              - output
+          outgoingConnections:
+            - output->"Graph Output" H6x2pi5gIdAe4Izs3YDDi/value
+          visualData: 3212.4179266096057/1312.8726507300582/460.4176716828715/321//
+        '[MTbkPJccFmTxsW8JyT7U2]:prompt "Prompt"':
+          data:
+            enableFunctionCall: false
+            promptText: Build a user grocery list in English as best as possible, if the
+              input does not fit any of the categories output empty
+              list.\n{{format_instructions}}\n possible category
+              {{categories}}\n{{query}}
+            type: user
+            useTypeInput: false
+          outgoingConnections:
+            - output->"Chat" N6LtISafFOBi17Lb4NTAw/prompt
+          visualData: 39.87709816790374/614.9105474642867/280/300//
+        '[N6LtISafFOBi17Lb4NTAw]:chat "Chat"':
+          data:
+            cache: false
+            enableFunctionUse: false
+            frequencyPenalty: 0
+            maxTokens: 1024
+            model: local-model
+            overrideModel: gpt-4-1106-preview
+            presencePenalty: 0
+            stop: ""
+            temperature: 0
+            top_p: 1
+            useAsGraphPartialOutput: true
+            useFrequencyPenaltyInput: false
+            useMaxTokensInput: false
+            useModelInput: false
+            usePresencePenaltyInput: false
+            useStop: false
+            useStopInput: false
+            useTemperatureInput: false
+            useTopP: false
+            useTopPInput: false
+            useUseTopPInput: false
+            useUserInput: false
+          outgoingConnections:
+            - response->"Extract JSON" EecRv7ZDLSO4hY7PC9216/input
+          visualData: 481.30979004784757/589.8694388284938/230/301//
+        '[T2bCGZbE_mC51bnzgYecG]:extractObjectPath "Extract Object Path"':
+          data:
+            path: $.product
+            usePathInput: false
+          isSplitRun: true
+          outgoingConnections:
+            - match->"Get Embedding" 0StxbIFHv-uN5fjfhsmGF/input
+          splitRunMax: 10
+          visualData: 1678.0375660006976/1205.9395936938656/280/297//
+        '[Xi8Ftbz5DodT0oMUDvEKp]:extractObjectPath "Extract Object Path"':
+          data:
+            path: $.shopping_list
+            usePathInput: false
+          outgoingConnections:
+            - match->"Extract Object Path" T2bCGZbE_mC51bnzgYecG/object
+            - match->"Graph Output" EIMVNImIY9ilMTKRZ0y1y/value
+            - match->"Object" EoMPFBe-jFb3lse3wwM8M/baseObject
+          visualData: 1298.7619183882202/508.84466247357125/228.56114652962538/318//
+        '[cbUbrHLW7a3C51T34suUS]:text "Text"':
+          data:
+            text: |-
+              {
+                  "shopping_list":[
+                  {
+                      "product": "THE NAME OF THE PRODUCT",
+                      "quantity": "THE AMOUNT OF THE PRODUCT"),
+                      "unit": "UNIT",
+                      "category": "CATEGORY"}
+                  }]
+              }
+          outgoingConnections:
+            - output->"Prompt" MTbkPJccFmTxsW8JyT7U2/format_instructions
+          visualData: -539.1186667455959/321.81359535968306/330/299//
+        '[dvPYtGZvd3M1yHMKofhuW]:graphInput "Graph Input"':
+          data:
+            dataType: string
+            defaultValue: Milk and Banana
+            id: input
+            useDefaultValueInput: true
+          outgoingConnections:
+            - data->"Prompt" MTbkPJccFmTxsW8JyT7U2/query
+          visualData: -519.0709966023228/966.4200919523976/330/325//
+        '[hRtRkSGmuGPIN3R814Knp]:array "Array"':
+          data:
+            flatten: true
+            flattenDeep: false
+          outgoingConnections:
+            - output->"Code" JBzVqr_7_xcJXEYfkVVAh/input
+          visualData: 3040.5847218607637/1616.3790825186936/661.5780313579098/320//
+        '[jOh-RwT9hW1oJzdJzExDK]:mongoDBCollectionSearch "Search a MongoDB collection and return documents"':
+          data:
+            collection: "categories "
+            database: ai_shop
+            promptText: ""
+          outgoingConnections:
+            - documents->"Prompt" MTbkPJccFmTxsW8JyT7U2/categories
+          visualData: -521.483500261368/652.4373093084703/314.05463470598704/324//
+  metadata:
+    description: A quick project to showcase the MongoDB Connector and a tutorial
+      for using a complex AI flow.
+    id: nx2MHt1IaBJxUaAEpTEEx
+    title: MongoDB-Atlas-Rivet-Project-Examples
+  plugins:
+    - id: rivet-plugin-mongodb@latest
+      package: rivet-plugin-mongodb
+      tag: latest
+      type: package
