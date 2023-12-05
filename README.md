@@ -21,7 +21,7 @@ The server uses Rivet's capabilities to run a graph that takes user queries, pro
 2. Run `npm install` to install all the dependencies.
 3. Make sure to set up your `.env` file with the following variables:
    - `DB_URL`: Your MongoDB connection string.
-   - `GRAPH_ID`: The ID of your Rivet graph.
+   - `GRAPH_ID`: The ID of your Rivet graph ("puzj17gj_xu56GUlr7164").
    - `OPEN_AI_KEY`: Your OpenAI API key.
    - `RIVET_MONGODB_CONNECTION_STRING`: The MongoDB connection string for the Rivet plugin.
 
