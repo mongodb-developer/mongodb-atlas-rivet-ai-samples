@@ -27,7 +27,7 @@ The server uses Rivet's capabilities to run a graph that takes user queries, pro
 
 ### Running the Server
 
-Execute `node server.js` to start the server. It will listen on the defined PORT (default is 3000).
+Execute `npm run server` to start the server. It will listen on the defined PORT (default is 3000).
 
 ## Usage
 
