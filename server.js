@@ -66,7 +66,7 @@ app.post('/aiRivetSearch', async (req, res) => {
     console.log(process.env.GRAPH_ID);
     console.log("Before running graph");
 
-    const project = await loadProjectFromFile('./server/ai_shop.graph.rivet-project');
+    const project = await loadProjectFromFile('./MongoDB-Atlas-Rivet-Project-Examples.rivet-project');
    const response = await runGraph(project, { graph: process.env.GRAPH_ID,
     openAiKey : process.env.OPEN_AI_KEY,
     inputs : {
