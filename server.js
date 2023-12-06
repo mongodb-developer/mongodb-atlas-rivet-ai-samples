@@ -52,47 +52,55 @@ const connectToDb = async () => {
 };
 
 
+// Define a new POST endpoint for handling AI-enhanced search with Rivet
 app.post('/aiRivetSearch', async (req, res) => {
 
-    // Connect to MongoDB
+    // Connect to MongoDB using a custom function that handles the connection logic
     db = await connectToDb();
 
-    
-
-    // Extract search query from the request
+    // Extract the search query sent in the POST request body
     const { query } = req.body;
 
+    // Logging the query and environment variables for debugging purposes
     console.log(query);
     console.log(process.env.GRAPH_ID);
     console.log("Before running graph");
 
-    const project = await loadProjectFromFile('./MongoDB-Atlas-Rivet-Project-Examples.rivet-project');
-   const response = await runGraph(project, { graph: process.env.GRAPH_ID,
-    openAiKey : process.env.OPEN_AI_KEY,
-    inputs : {
-       input : {
-        type: "string",
-        value: query
-       }
-      }  ,
-    pluginSettings: {
-        rivetPluginMongodb: {
-            mongoDBConnectionString: process.env.RIVET_MONGODB_CONNECTION_STRING,
-        }}
+    // Load the Rivet project graph from the filesystem to use for the search
+    const project = await loadProjectFromFile('./server/ai_shop.graph.rivet-project');
+
+    // Execute the loaded graph with the provided inputs and plugin settings
+    const response = await runGraph(project, { 
+        graph: process.env.GRAPH_ID,
+        openAiKey: process.env.OPEN_AI_KEY,
+        inputs: {
+            input: {
+                type: "string",
+                value: query
+            }
+        },
+        pluginSettings: {
+            rivetPluginMongodb: {
+                mongoDBConnectionString: process.env.RIVET_MONGODB_CONNECTION_STRING,
+            }
+        }
     });
-    
 
-    console.log(response.result.value);
-    console.log(response.list.value);
 
+    // Parse the MongoDB aggregation pipeline from the graph response
     const pipeline = JSON.parse(response.result.value);
 
+    // Connect to the 'products' collection in MongoDB and run the aggregation pipeline
     const collection = db.collection('products');
     const result = await collection.aggregate(pipeline).toArray();
     
-    // Respond with results
-    res.json({ "result": result, "searchList": response.list.value, prompt: query, pipeline: pipeline });
-
+    // Send the search results back to the client along with additional context
+    res.json({ 
+        "result": result, 
+        "searchList": response.list.value, 
+        prompt: query, 
+        pipeline: pipeline 
+    });
 
 });
 
