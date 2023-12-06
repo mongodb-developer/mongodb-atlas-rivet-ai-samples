@@ -42,7 +42,7 @@ Send a POST request to `/aiRivetSearch` with a JSON body containing a `query`. T
 
 Example request:
 
-```json
+```
 POST /aiRivetSearch HTTP/1.1
 Host: localhost:3000
 Content-Type: application/json
@@ -51,6 +51,12 @@ Content-Type: application/json
    // eg. "Banana and Milk" or "Lasagne reciepe"
     "query": "Your search query"
 }
+```
+
+```shell
+curl -X POST http://localhost:3000/aiRivetSearch \
+-H "Content-Type: application/json" \
+-d '{"query": "Banana and Milk"}'
 ```
 
 You will receive a response with the search results, the original search list, and the pipeline used for the MongoDB aggregation.
