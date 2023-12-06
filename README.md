@@ -48,6 +48,7 @@ Host: localhost:3000
 Content-Type: application/json
 
 {
+   // eg. "Banana and Milk" or "Lasagne reciepe"
     "query": "Your search query"
 }
 ```
