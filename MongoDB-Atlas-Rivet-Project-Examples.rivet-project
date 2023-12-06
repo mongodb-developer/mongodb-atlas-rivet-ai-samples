@@ -264,7 +264,7 @@ data:
           visualData: 3040.5847218607637/1616.3790825186936/661.5780313579098/320//
         '[jOh-RwT9hW1oJzdJzExDK]:mongoDBCollectionSearch "Search a MongoDB collection and return documents"':
           data:
-            collection: "categories "
+            collection: "categories"
             database: ai_shop
             promptText: ""
           outgoingConnections:
