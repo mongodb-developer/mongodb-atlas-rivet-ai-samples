@@ -1,6 +1,6 @@
 # AI Rivet Search API
 
-This repository contains an Express.js server that serves as an endpoint to interact with a Rivet graph to process queries and return a list of products using MongoDB.
+This repository contains an Express.js server that serves as an endpoint to interact with a Rivet graph to process queries and return a list of products using MongoDB. This is a complimintery repository for Article [PLACE HOLDER].
 
 ## Overview
 
@@ -12,10 +12,17 @@ The server uses Rivet's capabilities to run a graph that takes user queries, pro
 
 - Node.js
 - npm or yarn
-- MongoDB
+- MongoDB Atlas 
 - Access to Rivet and the relevant plugins
 
+**Complete steps 1-5 from the AI-Shop github tutorial** : https://github.com/mongodb-developer/ai-shop
+
+
 ### Installation
+
+To run the Rivet Graphs from the UI follow the instructions to [install Rivet](https://rivet.ironcladapp.com/docs/getting-started/installation) and [Setup](https://rivet.ironcladapp.com/docs/getting-started/setup) OpenAI key and the MongoDB Plugin. Once installed import the project file into Rivet.
+
+To run the server side please follow:
 
 1. Clone the repository to your local machine.
 2. Run `npm install` to install all the dependencies.
