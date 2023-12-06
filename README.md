@@ -1,6 +1,6 @@
 # AI Rivet Search API
 
-This repository contains an Express.js server that serves as an endpoint to interact with a Rivet graph to process queries and return a list of products using MongoDB. This is a complimintery repository for Article [PLACE HOLDER].
+This repository contains an Express.js server that serves as an endpoint to interact with a [Rivet](https://rivet.ironcladapp.com/) graph to process queries and return a list of products using MongoDB. This is a complimintery repository for Article [PLACE HOLDER]. Additionally, there are 2 simple graphs that can be ron through Rivet's UI tool.
 
 ## Overview
 
