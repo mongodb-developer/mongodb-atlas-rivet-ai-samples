@@ -1,6 +1,6 @@
 # AI Rivet Search API
 
-This repository contains an Express.js server that serves as an endpoint to interact with a [Rivet](https://rivet.ironcladapp.com/) graph to process queries and return a list of products using MongoDB. This is a complimintery repository for Article [PLACE HOLDER]. Additionally, there are 2 simple graphs that can be run through Rivet's UI tool.
+This repository contains an Express.js server that serves as an endpoint to interact with a [Rivet](https://rivet.ironcladapp.com/) graph to process queries and return a list of products using MongoDB. This is a complimintery repository for Article : [Building AI Graphs with Rivet and MongoDB Atlas Vector Search to Power AI Applications](https://www.mongodb.com/developer/products/atlas/atlas-rivet-graph-ai-integ/). Additionally, there are 2 simple graphs that can be run through Rivet's UI tool.
 
 ## Overview
 
